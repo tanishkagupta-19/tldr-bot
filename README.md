@@ -14,7 +14,8 @@ It uses AI to intelligently find the article you're looking for and then gives y
 
 ### What it does
 
-* **A Smarter Search:** It's smart enough to figure out what you *mean*, not just what you type. It just gets you.
+* **A Smarter Search:** It's smart enough to figure out what you *mean*, not just what you type. It just gets you. Just type the topic and it will fetch the article along with its summary.
+
 
 * **Instant Summaries:** It reads the whole thing so you don't have to, and generates a new summary that's actually good.
 
