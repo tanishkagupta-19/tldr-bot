@@ -1,6 +1,8 @@
 # TLDR Bot
 Ever open an article and see a massive wall of text? Yeah, this bot gets it.
+
 It uses AI to intelligently find the article you're looking for and then gives you the sparknotes version, so you can actually keep up.
+
 (TLDR stands for **"Too Long; Didn't Read"** — the problem this bot was built to solve.)
 
 ---
