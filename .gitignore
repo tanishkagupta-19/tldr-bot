@@ -1,0 +1,16 @@
+# Python's cache and compiled files
+__pycache__/
+*.pyc
+
+# Virtual environment folder
+tldr-env/
+
+# Large data and index files that shouldn't be on GitHub
+/data/
+/saved_index/
+
+# VS Code specific settings folder
+.vscode/
+
+# Environment variables file
+.env
