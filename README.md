@@ -1,4 +1,5 @@
 # TLDR Bot
+
 Ever open an article and see a massive wall of text? Yeah, this bot gets it.
 
 It uses AI to intelligently find the article you're looking for and then gives you the sparknotes version, so you can actually keep up.
@@ -6,16 +7,11 @@ It uses AI to intelligently find the article you're looking for and then gives y
 (TLDR stands for **"Too Long; Didn't Read"** — the problem this bot was built to solve.)
 
 ---
-> Check out the live demo
-
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-live-app-url.streamlit.app/)
-
 ---
 
-### What it does
+## What it does
 
 * **A Smarter Search:** It's smart enough to figure out what you *mean*, not just what you type. It just gets you. Just type the topic and it will fetch the article along with its summary.
-
 
 * **Instant Summaries:** It reads the whole thing so you don't have to, and generates a new summary that's actually good.
 
@@ -23,7 +19,7 @@ It uses AI to intelligently find the article you're looking for and then gives y
 
 ---
 
-### The Tech Stack 
+### The Tech Stack
 
 * **Python** (obviously)
 * **Hugging Face Transformers**
@@ -34,20 +30,17 @@ It uses AI to intelligently find the article you're looking for and then gives y
 
 ### How to Run it Locally
 
-1.  **Clone this repository:**
+1. **Clone this repository:**
+
     ```bash
     git clone [https://github.com/your-username/tldr-bot.git](https://github.com/your-username/tldr-bot.git)
     cd tldr-bot
     ```
 
-2.  **Install the required libraries:**
+2. **Install the required libraries:**
+
     ```bash
     pip install -r requirements.txt
-    ```
-
-3.  **Run the app:**
-    ```bash
-    streamlit run app.py
     ```
 
 ---
