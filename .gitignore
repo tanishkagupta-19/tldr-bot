@@ -1,0 +1,61 @@
+# Python's cache and compiled files
+__pycache__/
+*.pyc
+
+# Virtual environment folder
+tldr-env/
+
+# Large data and index files that shouldn't be on GitHub
+/data/
+/saved_index/
+
+# VS Code specific settings folder
+.vscode/
+
+/frontend/node_modules/
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+/dist
+
+# misc
+.DS_Store
+*.pem
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.bak
+
+# cache
+.eslintcache
+.cache
+.parcel-cache
+
+# vercel
+.vercel
