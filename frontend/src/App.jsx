@@ -295,7 +295,7 @@ function TLDRBotWebsite() {
           isScrolled ? "bg-[#050508]/95 border-purple-500/20 shadow-lg" : "bg-transparent border-transparent"
         )}
       >
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="h-6 w-6 text-purple-400" />
             <span className="text-xl font-bold">TLDR Bot</span>
@@ -490,7 +490,6 @@ function TLDRBotWebsite() {
             </div>
             <p className="mb-4">© 2024 TLDR Bot. Built with passion by a solo developer.</p>
              <div className="flex gap-4 justify-center">
-              {/* for mail: */}
               <a href="mailto:tanishkagupta194@gmail.com" class="text-gray-400 hover:text-purple-400"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 7.5v9a2.25 2.25 0 01-2.25 2.25H4.5A2.25 2.25 0 012.25 16.5v-9m19.5 0L12 13.5 2.25 7.5m19.5 0A2.25 2.25 0 0019.5 5.25H4.5A2.25 2.25 0 002.25 7.5" /></svg></a>
               <a href="https://github.com/tanishkagupta-19" className="text-gray-400 hover:text-purple-400"><Github className="h-5 w-5" /></a>
               <a href="https://www.linkedin.com/in/tanishkagupta19/" className="text-gray-400 hover:text-purple-400"><Linkedin className="h-5 w-5" /></a>
