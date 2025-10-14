@@ -31,7 +31,7 @@ def perform_search(query:str, embedder: SentenceTransformer,index:faiss.Index,k:
 def generate_summary(text: str, summarizer):
     try:
         if text and isinstance(text,str) and len(text.split())>40:
-            summary_result=summarizer(text,max_length=150,min_length=40,do_sample=False)
+            summary_result=summarizer(text,max_length=250,min_length=100,do_sample=False)
             if summary_result and summary_result[0]['summary_text']:
                 return summary_result[0]['summary_text']
             else:
@@ -44,7 +44,7 @@ def generate_summary(text: str, summarizer):
 def get_chat_response(question:str,context:str,llm):
     template="""
     You are a helpful assistant that answers questions based ONLY on the provided context.
-    If the answer is not in the context, say 'I cannot find the answer in this article.'
+    If the answer is not in the context, say 'I cannot find the answer in this article. 😔'
     
     CONTEXT:
     {context}
