@@ -38,6 +38,18 @@ const useAnimatedDots = (canvasRef) => {
   const RADIUS_BOOST = 2;
   const GRID_CELL_SIZE = Math.max(50, Math.floor(INTERACTION_RADIUS / 1.5));
 
+  const handleMouseMove = useCallback((event) => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      mousePositionRef.current = { x: null, y: null };
+      return;
+    }
+    const rect = canvas.getBoundingClientRect();
+    const canvasX = event.clientX - rect.left;
+    const canvasY = event.clientY - rect.top;
+    mousePositionRef.current = { x: canvasX, y: canvasY };
+  }, [canvasRef]);
+
   const createDots = useCallback(() => {
     const { width, height } = canvasSizeRef.current;
     if (width === 0 || height === 0) return;
@@ -77,23 +89,32 @@ const useAnimatedDots = (canvasRef) => {
     }
     dotsRef.current = newDots;
     gridRef.current = newGrid;
-  }, []);
+  }, [DOT_SPACING, GRID_CELL_SIZE, BASE_OPACITY_MIN, BASE_OPACITY_MAX, BASE_RADIUS]);
 
   const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const container = canvas.parentElement;
-    const width = container ? container.clientWidth : window.innerWidth;
-    const height = container ? container.clientHeight : window.innerHeight;
-
-    if (canvas.width !== width || canvas.height !== height ||
-      canvasSizeRef.current.width !== width || canvasSizeRef.current.height !== height) {
-      canvas.width = width;
-      canvas.height = height;
-      canvasSizeRef.current = { width, height };
-      createDots();
-    }
-  }, [createDots]);
+    
+    // Get the device pixel ratio
+    const dpr = window.devicePixelRatio || 1;
+    
+    // Get the size of the canvas in CSS pixels
+    const rect = canvas.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    
+    // Scale the canvas by the device pixel ratio
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    
+    // Scale all drawing operations by the device pixel ratio
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    
+    // Update the canvas size ref with the CSS pixel values
+    canvasSizeRef.current = { width, height };
+    createDots();
+  }, [createDots, canvasRef]);
 
   const animateDots = useCallback(() => {
     const canvas = canvasRef.current;
@@ -108,7 +129,13 @@ const useAnimatedDots = (canvasRef) => {
       return;
     }
 
-    ctx.clearRect(0, 0, width, height);
+    // Clear with proper dimensions
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Restore the scaled transform
+    const dpr = window.devicePixelRatio || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     const activeDotIndices = new Set();
     if (mouseX !== null && mouseY !== null) {
@@ -160,19 +187,7 @@ const useAnimatedDots = (canvasRef) => {
     });
 
     animationFrameId.current = requestAnimationFrame(animateDots);
-  }, []);
-  
-  const handleMouseMove = useCallback((event) => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      mousePositionRef.current = { x: null, y: null };
-      return;
-    }
-    const rect = canvas.getBoundingClientRect();
-    const canvasX = event.clientX - rect.left;
-    const canvasY = event.clientY - rect.top;
-    mousePositionRef.current = { x: canvasX, y: canvasY };
-  }, []);
+  }, [canvasRef, GRID_CELL_SIZE, INTERACTION_RADIUS, INTERACTION_RADIUS_SQ, OPACITY_BOOST, RADIUS_BOOST, BASE_OPACITY_MIN, BASE_OPACITY_MAX]);
 
   useEffect(() => {
     handleResize();
@@ -197,10 +212,21 @@ const useAnimatedDots = (canvasRef) => {
   }, [handleResize, handleMouseMove, animateDots]);
 };
 
-// --- Main App Component ---
 function TLDRBotWebsite() {
   const canvasRef = useRef(null);
   useAnimatedDots(canvasRef);
+
+  // Ensure proper width on mount
+  useEffect(() => {
+    document.documentElement.style.width = '100%';
+    document.body.style.width = '100%';
+    document.getElementById('root').style.width = '100%';
+    return () => {
+      document.documentElement.style.width = '';
+      document.body.style.width = '';
+      document.getElementById('root').style.width = '';
+    };
+  }, []);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -251,30 +277,35 @@ function TLDRBotWebsite() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0f] via-[#1a1a2e] to-[#0a0a0f] text-white relative overflow-hidden font-sans">
-      <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-60" />
-      <div className="absolute inset-0 z-1 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse at center, transparent 40%, #0a0a0f 95%)'
+    <div className="flex flex-col w-full min-h-screen bg-gradient-to-br from-[#050508] via-[#10101a] to-[#050508] text-white relative overflow-x-hidden font-sans">
+      <canvas 
+        ref={canvasRef} 
+        className="fixed inset-0 z-0 pointer-events-none opacity-60" 
+        style={{ width: '100%', height: '100%' }}
+      />
+      <div className="fixed inset-0 z-1 pointer-events-none w-full h-full" style={{
+        background: 'radial-gradient(ellipse at center, transparent 40%, #050508 95%)'
       }}></div>
 
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className={cn(
-          "sticky top-0 z-50 backdrop-blur-md border-b transition-all duration-300",
-          isScrolled ? "bg-[#0a0a0f]/95 border-purple-500/20 shadow-lg" : "bg-transparent border-transparent"
+          "sticky top-0 z-50 backdrop-blur-md border-b transition-all duration-300 w-full",
+          isScrolled ? "bg-[#050508]/95 border-purple-500/20 shadow-lg" : "bg-transparent border-transparent"
         )}
       >
-        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="h-6 w-6 text-purple-400" />
             <span className="text-xl font-bold">TLDR Bot</span>
           </div>
           <nav className="hidden md:flex items-center gap-6">
             <a href="#about" className="text-sm hover:text-purple-400 transition-colors">About</a>
-            <a href="#features" className="text-sm hover:text-purple-400 transition-colors">Features</a>
-            <a href="#contact" className="text-sm hover:text-purple-400 transition-colors">Contact</a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+            <a href="#features" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }}className="text-sm hover:text-purple-400 transition-colors">Features</a>
+            <a href="#contact"onClick={(e) => {e.preventDefault();const footer = document.querySelector("footer");footer.scrollIntoView({ behavior: "smooth" });}}className="text-sm hover:text-purple-400 transition-colors">Contact</a>
+            <a href="https://github.com/tanishkagupta-19/tldr-bot" target="_blank" rel="noopener noreferrer">
               <Github className="h-5 w-5 hover:text-purple-400 transition-colors" />
             </a>
           </nav>
@@ -288,7 +319,7 @@ function TLDRBotWebsite() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-[#0a0a0f]/95 border-t border-purple-500/20"
+              className="md:hidden bg-[#050508]/95 border-t border-purple-500/20"
             >
               <div className="container mx-auto px-6 py-4 flex flex-col gap-4">
                 <a href="#about" className="text-sm hover:text-purple-400">About</a>
@@ -300,7 +331,7 @@ function TLDRBotWebsite() {
         </AnimatePresence>
       </motion.header>
 
-      <main className="relative z-10">
+      <main className="relative z-10 w-full flex-grow flex flex-col">
         <AnimatePresence mode="wait">
           {!showResults && !showChat ? (
             <motion.section
@@ -308,7 +339,7 @@ function TLDRBotWebsite() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="container mx-auto px-6 py-20 min-h-[80vh] flex flex-col items-center justify-center text-center"
+              className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 min-h-[80vh] flex flex-col items-center justify-center text-center w-full"
             >
                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="inline-block mb-6">
                 <span className="px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm">
@@ -343,7 +374,7 @@ function TLDRBotWebsite() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="container mx-auto px-6 py-10 min-h-[80vh]"
+              className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-[80vh] w-full"
             >
               <button onClick={() => {setShowChat(false); setShowResults(true)}} className="mb-6 border border-purple-500/30 hover:bg-purple-500/10 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center transition-all">
                 <ChevronRight className="h-4 w-4 rotate-180 mr-2" />
@@ -393,7 +424,7 @@ function TLDRBotWebsite() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="container mx-auto px-6 py-10 min-h-[80vh]"
+              className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-[80vh] w-full"
             >
               <button onClick={() => setShowResults(false)} className="mb-6 border border-purple-500/30 hover:bg-purple-500/10 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center transition-all">
                 <ChevronRight className="h-4 w-4 rotate-180 mr-2" />
@@ -429,7 +460,7 @@ function TLDRBotWebsite() {
           )}
         </AnimatePresence>
         
-        <section id="features" className="container mx-auto px-6 py-20 relative z-10">
+        <section id="features" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10 w-full">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">How It Works</h2>
             <p className="text-xl text-gray-400">Powered by cutting-edge AI technology</p>
@@ -451,17 +482,18 @@ function TLDRBotWebsite() {
           </div>
         </section>
 
-        <footer className="relative z-10 border-t border-purple-500/20 py-12">
-          <div className="container mx-auto px-6 text-center text-gray-400 text-sm">
+        <footer className="relative z-10 border-t border-purple-500/20 py-12 w-full">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400 text-sm">
             <div className="flex items-center justify-center gap-2 mb-4">
               <Sparkles className="h-5 w-5 text-purple-400" />
               <span className="text-lg font-bold">TLDR Bot</span>
             </div>
             <p className="mb-4">© 2024 TLDR Bot. Built with passion by a solo developer.</p>
              <div className="flex gap-4 justify-center">
-              <a href="https://twitter.com" className="text-gray-400 hover:text-purple-400"><Twitter className="h-5 w-5" /></a>
-              <a href="https://github.com" className="text-gray-400 hover:text-purple-400"><Github className="h-5 w-5" /></a>
-              <a href="https://linkedin.com" className="text-gray-400 hover:text-purple-400"><Linkedin className="h-5 w-5" /></a>
+              {/* for mail: */}
+              <a href="mailto:tanishkagupta194@gmail.com" class="text-gray-400 hover:text-purple-400"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 7.5v9a2.25 2.25 0 01-2.25 2.25H4.5A2.25 2.25 0 012.25 16.5v-9m19.5 0L12 13.5 2.25 7.5m19.5 0A2.25 2.25 0 0019.5 5.25H4.5A2.25 2.25 0 002.25 7.5" /></svg></a>
+              <a href="https://github.com/tanishkagupta-19" className="text-gray-400 hover:text-purple-400"><Github className="h-5 w-5" /></a>
+              <a href="https://www.linkedin.com/in/tanishkagupta19/" className="text-gray-400 hover:text-purple-400"><Linkedin className="h-5 w-5" /></a>
             </div>
           </div>
         </footer>
