@@ -33,14 +33,14 @@ const useAnimatedDots = (canvasRef) => {
   const canvasSizeRef = useRef({ width: 0, height: 0 });
   const mousePositionRef = useRef({ x: null, y: null });
 
-  const DOT_SPACING = 30;
-  const BASE_OPACITY_MIN = 0.1;
-  const BASE_OPACITY_MAX = 0.3;
-  const BASE_RADIUS = 1.2;
-  const INTERACTION_RADIUS = 120;
+  const DOT_SPACING = 35;
+  const BASE_OPACITY_MIN = 0.3;
+  const BASE_OPACITY_MAX = 0.4;
+  const BASE_RADIUS = 1.8;
+  const INTERACTION_RADIUS = 150;
   const INTERACTION_RADIUS_SQ = INTERACTION_RADIUS * INTERACTION_RADIUS;
   const OPACITY_BOOST = 0.5;
-  const RADIUS_BOOST = 1.5;
+  const RADIUS_BOOST = 2;
   const GRID_CELL_SIZE = Math.max(50, Math.floor(INTERACTION_RADIUS / 1.5));
 
   const createDots = useCallback(() => {
@@ -326,7 +326,7 @@ function App() {
       }
     `}</style>
     <div className="min-h-screen w-full bg-gradient-to-br from-[#050508] via-[#10101a] to-[#050508] text-white relative overflow-x-hidden font-sans flex flex-col">
-      <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-50" style={{ width: '100%', height: '100%' }} />
+      <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-70" style={{ width: '100%', height: '100%' }} />
       <div className="absolute inset-0 z-1 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 40%, #050508 95%)' }}></div>
 
       <motion.header
@@ -379,16 +379,16 @@ function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full flex-grow flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8 py-20"
+              className="w-full flex-grow flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8 py-12"
             >
                <div className="w-full max-w-7xl mx-auto">
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="inline-block mb-6">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="inline-block mb-4">
                   <span className="px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm">
                     Skip the reading, get the knowledge
                   </span>
                 </motion.div>
-                <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  find the article,<br />skip the reading.
+                <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-5xl md:text-7xl font-bold mb-6 leading-snug md:leading-snug tracking-normal bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  find the article,<br />skip the reading
                 </motion.h1>
                 <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
                   An intelligent bot that cuts through the internet's noise. Find articles with semantic search and get instant summaries.
