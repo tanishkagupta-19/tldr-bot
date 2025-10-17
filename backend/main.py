@@ -16,11 +16,11 @@ app = FastAPI(
 )
 
 # --- CORS MIDDLEWARE ---
-# This is the new section that allows your frontend to talk to your backend.
+# This new section allows your frontend to talk to your backend.
 origins = [
     "http://localhost",
     "http://localhost:3000",
-    "http://localhost:5173", # Add the port your React app runs on
+    "http://localhost:5173", # The default port for Vite React apps
 ]
 
 app.add_middleware(
@@ -34,6 +34,7 @@ app.add_middleware(
 # --- LOAD MODELS ON STARTUP ---
 embedder, summarizer, df, index, llm = load_models_and_data()
 
+
 # --- DATA MODELS FOR REQUESTS ---
 class ChatRequest(BaseModel):
     article_id: int
@@ -44,12 +45,13 @@ class ChatRequest(BaseModel):
 def read_root():
     return {"message": "Welcome to the TLDR Bot API!"}
 
+
 @app.get("/search")
 def search_articles(query: str):
     if not query or not query.strip():
         raise HTTPException(status_code=400, detail="Query cannot be empty.")
 
-    matched_indices = perform_search(query,embedder,index,k=10)
+    matched_indices = perform_search(query, embedder, index, k=10)
     
     results = []
     for i in matched_indices:
@@ -62,6 +64,7 @@ def search_articles(query: str):
     
     return {"results": results}
 
+
 @app.get("/summarize/{article_id}")
 def get_summary(article_id: int):
     if article_id < 0 or article_id >= len(df):
@@ -70,6 +73,7 @@ def get_summary(article_id: int):
     article_text = df.iloc[article_id]['Article text']
     summary = generate_summary(article_text, summarizer)
     return {"article_id": article_id, "summary": summary}
+
 
 @app.post("/chat")
 def chat_with_article(request: ChatRequest):
