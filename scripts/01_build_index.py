@@ -21,7 +21,6 @@ if article_texts:
     embeddings=model.encode(article_texts,show_progress_bar=True)
     os.makedirs(EMBEDDING_PATH.parent,exist_ok=True)
     np.save(EMBEDDING_PATH,embeddings)
-
     if embeddings is not None:
         embedding_dimension=embeddings.shape[1]
         index=faiss.IndexFlatL2(embedding_dimension)
