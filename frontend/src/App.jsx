@@ -16,9 +16,7 @@ import {
   LoaderCircle,
   ExternalLink
 } from "lucide-react";
-
-// --- Configuration ---
-const API_URL = "http://127.0.0.1:8000";
+import { searchArticles, getSummary, chatWithBot } from "./services/api";
 
 // --- Utility Function ---
 function cn(...classes) {
@@ -35,7 +33,7 @@ const useAnimatedDots = (canvasRef) => {
 
   const DOT_SPACING = 35;
   const BASE_OPACITY_MIN = 0.3;
-  const BASE_OPACITY_MAX = 0.4;
+  const BASE_OPACITY_MAX = 0.6;
   const BASE_RADIUS = 1.8;
   const INTERACTION_RADIUS = 150;
   const INTERACTION_RADIUS_SQ = INTERACTION_RADIUS * INTERACTION_RADIUS;
@@ -234,11 +232,7 @@ function App() {
     setShowResults(true);
 
     try {
-      const response = await fetch(`${API_URL}/search?query=${encodeURIComponent(searchQuery)}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
+      const data = await searchArticles(searchQuery);
       setSearchResults(data.results);
     } catch (error) {
       console.error('Search error:', error);
@@ -259,11 +253,7 @@ function App() {
     if (!summaries[articleId]) {
       try {
         setSummaries(prev => ({...prev, [articleId]: "Loading summary..."}));
-        const response = await fetch(`${API_URL}/summarize/${articleId}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch summary.");
-        }
-        const data = await response.json();
+        const data = await getSummary(articleId);
         setSummaries(prev => ({...prev, [articleId]: data.summary}));
       } catch (e) {
         setSummaries(prev => ({...prev, [articleId]: "Error loading summary."}));
@@ -288,16 +278,7 @@ function App() {
     setChatInput("");
 
     try {
-      const response = await fetch(`${API_URL}/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          article_id: activeArticle.id,
-          question: currentChatInput,
-        }),
-      });
+      const response = await chatWithBot(currentChatInput, activeArticle.id);
 
       if (!response.ok) {
         throw new Error("Failed to get chat response.");
