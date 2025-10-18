@@ -31,14 +31,14 @@ const useAnimatedDots = (canvasRef) => {
   const canvasSizeRef = useRef({ width: 0, height: 0 });
   const mousePositionRef = useRef({ x: null, y: null });
 
-  const DOT_SPACING = 35;
-  const BASE_OPACITY_MIN = 0.3;
-  const BASE_OPACITY_MAX = 0.6;
-  const BASE_RADIUS = 1.8;
-  const INTERACTION_RADIUS = 150;
+  const DOT_SPACING = 40;      // Increased spacing between dots
+  const BASE_OPACITY_MIN = 0.2;   // Maintain minimum opacity
+  const BASE_OPACITY_MAX = 0.35;  // Maintain maximum opacity
+  const BASE_RADIUS = 1.2;       // Smaller, more precise radius
+  const INTERACTION_RADIUS = 160; // Reduced interaction area
   const INTERACTION_RADIUS_SQ = INTERACTION_RADIUS * INTERACTION_RADIUS;
-  const OPACITY_BOOST = 0.5;
-  const RADIUS_BOOST = 2;
+  const OPACITY_BOOST = 0.4;     // Slightly reduced opacity boost
+  const RADIUS_BOOST = 1.5;      // Reduced radius boost for cleaner dots
   const GRID_CELL_SIZE = Math.max(50, Math.floor(INTERACTION_RADIUS / 1.5));
 
   const createDots = useCallback(() => {
@@ -300,8 +300,8 @@ function App() {
       }
     `}</style>
     <div className="min-h-screen w-full bg-gradient-to-br from-[#050508] via-[#10101a] to-[#050508] text-white relative overflow-x-hidden font-sans flex flex-col">
-      <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-70" style={{ width: '100%', height: '100%' }} />
-      <div className="absolute inset-0 z-1 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 40%, #050508 95%)' }}></div>
+      <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-85" style={{ width: '100%', height: '100%' }} />
+      <div className="absolute inset-0 z-1 pointer-events-none" style={{ background: 'radial-gradient(circle at center, transparent 25%, rgba(5,5,8,0.3) 65%, #050508 95%)' }}></div>
 
       <motion.header
         initial={{ y: -100 }}
