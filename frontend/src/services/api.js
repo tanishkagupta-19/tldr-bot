@@ -16,14 +16,14 @@ export const getSummary = async (articleId) => {
   return response.json();
 };
 
-export const chatWithBot = async (message, articleId) => {
+export const chatWithBot = async (question, articleId) => {
   const response = await fetch(`${API_URL}/chat`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      message,
+      question,
       article_id: articleId,
     }),
   });

@@ -278,16 +278,9 @@ function App() {
     setChatInput("");
 
     try {
-      const response = await chatWithBot(currentChatInput, activeArticle.id);
-
-      if (!response.ok) {
-        throw new Error("Failed to get chat response.");
-      }
-      
-      const data = await response.json();
+      const data = await chatWithBot(currentChatInput, activeArticle.id);
       const botMessage = { type: 'bot', text: data.answer };
       setChatMessages(prev => [...prev, botMessage]);
-
     } catch (e) {
       const errorMessage = { type: 'bot', text: "Sorry, I couldn't get a response. Please try again." };
       setChatMessages(prev => [...prev, errorMessage]);
