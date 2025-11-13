@@ -59,3 +59,30 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# Node / JavaScript
+node_modules/
+/frontend-app/node_modules/
+
+# Next.js / Frontend app build
+/frontend-app/.next/
+/frontend-app/out/
+/frontend-app/.vercel/
+
+# Lockfiles (optional - keep if you want reproducible installs in repo)
+# package-lock.json
+
+# Python packaging
+pip-wheel-metadata/
+*.egg-info/
+
+# pytest
+.pytest_cache/
+
+# mac/windows system files
+Thumbs.db
+ehthumbs.db
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
