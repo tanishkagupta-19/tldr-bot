@@ -4,7 +4,7 @@ from sentence_transformers import SentenceTransformer
 from transformers import pipeline
 from pathlib import Path
 from langchain_huggingface import HuggingFacePipeline
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 import sys
 import os
 current_dir=os.path.dirname(os.path.abspath(__file__))
