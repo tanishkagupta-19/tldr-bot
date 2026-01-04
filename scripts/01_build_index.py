@@ -4,7 +4,6 @@ import numpy as np
 import os
 import faiss
 from pathlib import Path
-
 DATA_PATH=Path("data")/"CNN_Articels_clean.csv"
 EMBEDDING_PATH=Path("saved_index")/"article_embeddings.npy"
 INDEX_PATH=Path("saved_index")/"faiss_index.bin"
