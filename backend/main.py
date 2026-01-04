@@ -1,7 +1,7 @@
 from fastapi import FastAPI,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from engine import(load_models_and_data,search_and_scrape,get_content_by_id,generate_summary,get_chat_response)
+from .engine import(load_models_and_data,search_and_scrape,get_content_by_id,generate_summary,get_chat_response)
 app=FastAPI(title="TLDR Bot API",description="An API for semantic search, summarization, and chat with news articles.",version="2.0.0")
 origins=["http://localhost","http://localhost:3000","http://localhost:5173"]
 app.add_middleware(CORSMiddleware,allow_origins=origins,allow_credentials=True,allow_methods=["*"],allow_headers=["*"])
