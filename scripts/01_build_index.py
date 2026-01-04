@@ -14,7 +14,7 @@ try:
     df.dropna(subset=['Article text'],inplace=True)
     article_texts=df['Article text'].tolist()
 except FileNotFoundError:
-    print(f"Error:File not found at {DATA_PATH}. Cannot proceed.")
+    pass
 if article_texts:
     model=SentenceTransformer('BAAI/bge-large-en-v1.5')
     embeddings=model.encode(article_texts,show_progress_bar=True)
@@ -25,6 +25,3 @@ if article_texts:
         index=faiss.IndexFlatL2(embedding_dimension)
         index.add(embeddings)
         faiss.write_index(index,str(INDEX_PATH))
-        print(f"Index built successfully with {index.ntotal} vectors.")
-else:
-    print("Skipping AI processing because no articles were loaded.")
